@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>video02</title>
+</head>
+
+<body>
+    <video src="" width="100%" controls></video>
+    <div class="btns">
+        <button id="video1">影片1</button>
+        <button id="video2">影片2</button>
+        <button id="video3">影片3</button>
+        <button id="video4">影片4</button>
+        <button id="control">控制</button>
+    </div>
+    <script>
+        const btns = {
+            v1: document.querySelector("#video1"),
+            v2: document.querySelector("#video2"),
+            v3: document.querySelector("#video3"),
+            v4: document.querySelector("#video4"),
+            control: document.querySelector("#control")
+        }
+        const btnsElm = document.querySelector(".btns")
+        const player = document.querySelector("video")
+        player.setAttribute("poster", "./bg.jfif")
+
+        player.addEventListener("loadedmetadata", playerEvent)
+        player.addEventListener("timeupdate", playerEvent)
+        player.addEventListener("ended", playerEvent)
+
+        btnsElm.addEventListener("click", e => {
+            switch (e.target) {
+                case btns.v1:
+                    player.src = "./HTML5 API/videos/video1.mp4"
+                    player.play()
+                    player.volume = 0.2
+                    break
+                case btns.v2:
+                    player.src = "./HTML5 API/videos/video2.mp4"
+                    player.play()
+                    break
+                case btns.v3:
+                    player.src = "./HTML5 API/videos/video3.mp4"
+                    player.play()
+                    break
+                case btns.v4:
+                    player.src = "./HTML5 API/videos/video4.mp4"
+                    player.play()
+                    break
+                case btns.control:
+                    player.paused ? player.play() : player.pause()
+            }
+        })
+
+        function playerEvent(e) {
+            console.log(`${e.type},${player.currentTime}/${player.duration},音量${player.volume},靜音${player.muted},暫停${player.paused}`);
+        }
+    </script>
+</body>
+
+</html>

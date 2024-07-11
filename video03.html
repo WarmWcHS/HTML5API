@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>video03</title>
+</head>
+
+<body>
+    <video src="" width="100%" controls></video>
+    <button>開始</button>
+    <script>
+        const btn = document.querySelector("button")
+        const player = document.querySelector("video")
+        const playlist = [
+            "./HTML5 API/videos/video1.mp4",
+            "./HTML5 API/videos/video2.mp4",
+            "./HTML5 API/videos/video3.mp4",
+            "./HTML5 API/videos/video4.mp4",
+        ]
+        let playNum = 0
+        btn.addEventListener("click", e => {
+            player.src = playlist[playNum]
+            player.play()
+            e.currentTarget.disabled = true
+        })
+
+        player.addEventListener("ended", e => {
+            playNum++
+            if(playNum >= playlist.length){
+                playNum =0
+            }
+            player.src = playlist[playNum]
+            player.play()
+        })
+    </script>
+</body>
+
+</html>

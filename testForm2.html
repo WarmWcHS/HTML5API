@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>test Form2</title>
+</head>
+
+<body>
+    <form action="" autocomplete="on">
+        <label for="myName">帳號：</label>
+        <input type="text" name="myName" id="myName" required autofocus><br>
+
+        <label for="myPass">密碼：</label>
+        <input pattern=".{6,}" type="password" name="myPass" id="myPass" required><br>
+
+        <label for="myPass2">密碼確認：</label>
+        <input type="password" name="myPass2" id="myPass2" required><br>
+
+        <label for="myTel">手機號碼：</label>
+        <input pattern="^09\d{2}-?\d{3}-?\d{3}$" type="tel" name="myTel" id="myTel" required><br>
+
+        <button type="submit">註冊</button>
+    </form>
+    <script>
+        const button = document.querySelector("button")
+        const myPass = document.querySelector("#myPass")
+        const myPass2 = document.querySelector("#myPass2")
+
+        button.addEventListener("click", e => {
+            // e.preventDefault()
+        })
+
+
+        myPass2.addEventListener("blur", e => {
+            console.log(e);
+            if (myPass.value !== myPass2.value) {
+                myPass2.setCustomValidity("必須和密碼欄位相同")
+            } else[
+                myPass2.setCustomValidity("")
+            ]
+        })
+    </script>
+</body>
+
+</html>

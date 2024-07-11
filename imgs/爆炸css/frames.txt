@@ -1,0 +1,19 @@
+    @keyframes explosion {
+      0% { background-position: -1px -1px; }
+      6.25% { background-position: -131px -1px; }
+      12.5% { background-position: -261px -1px; }
+      18.75% { background-position: -391px -1px; }
+      25% { background-position: -521px -1px; }
+      31.25% { background-position: -651px -1px; }
+      37.5% { background-position: -781px -1px; }
+      43.75% { background-position: -911px -1px; }
+      50% { background-position: -1041px -1px; }
+      56.25% { background-position: -1171px -1px; }
+      62.5% { background-position: -1301px -1px; }
+      68.75% { background-position: -1431px -1px; }
+      75% { background-position: -1561px -1px; }
+      81.25% { background-position: -1691px -1px; }
+      87.5% { background-position: -1821px -1px; }
+      93.75% { background-position: -1821px -1px; }
+      100% { background-position: -1821px -1px; }
+    }

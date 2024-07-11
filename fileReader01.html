@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>fileReader</title>
+    <style>
+        .myfiles{
+            display: none;
+        }
+        .container{
+            min-height: 30px;
+            background-color: #d46b6b;
+        }
+    </style>
+</head>
+<body>
+    <input type="file" class="myfiles" id="myfiles" name="myfiles" multiple>
+    <div class="container" id="container">
+
+    </div>
+    <script>
+        container.addEventListener("click",e => {
+            myfiles.click()
+        })
+        myfiles.addEventListener("change",e => {
+            let fileList = e.target.files
+            console.log(fileList[0]);
+            container.innerHTML ="";
+            [...fileList].forEach(file => {
+                container.innerHTML += `${file.name}<br>`
+            })
+        })
+    </script>
+</body>
+</html>

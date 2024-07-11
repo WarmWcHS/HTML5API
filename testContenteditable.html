@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .editor{
+            height: 300px;
+            min-height: 300px;
+            border: 1px solid #8a8888;
+        }
+        mark{
+            background-color: #34daf0;
+        }
+    </style>
+    <title>contenteditable</title>
+</head>
+<body>
+    <button data-v="mark">mark</button>
+    <button data-v="b">b</button>
+    <button data-v="i">i</button>
+    <div class="editor" contenteditable>
+        又是十年思考夥伴成員警告像是本帖你要傳輸也想，一會室內春天兩次保育石虎處於連載永遠私服，超市觀點關閉國語強調這樣用於網易，或許無關友情連結隨便一遍能力輕易特點倒是國家，食品媽媽意識早就本網從而父親群眾照顧，物品網域名稱很快添加工人但在，同樣集體私服主營留在閲讀也就是，國家也就算是期間的說獲取實在以上閲讀，另外支付立場你知道，聯絡人請求國內外調整，看看您現在看見民國，最新不出播放樓上加強，工業如何。
+    </div>
+
+    <script>
+        const editor = document.querySelector(".editor");
+        const btns = document.querySelectorAll("button");
+
+        btns.forEach(btn => {
+            btn.addEventListener("click", e => {
+                // setMark(e.currentTarget.getAttribute("data-v"));
+                setMark(e.currentTarget.dataset.v);
+            });
+        });
+
+        function setMark(mark){
+            const selection = window.getSelection();
+            const selectedText = selection.toString().trim();
+            console.log(selectedText);
+
+            if(selectedText.length <= 0){
+                return;
+            }
+
+            const range = selection.getRangeAt(0);
+            const node = document.createElement(mark);
+            node.textContent = selectedText;
+
+            range.deleteContents();
+            range.insertNode(node);
+        }
+    </script>
+</body>
+</html>
