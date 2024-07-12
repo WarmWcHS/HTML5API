@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #dragArea {
+            width: 200px;
+            height: 200px;
+            border: 2px dashed #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #dropArea {
+            width: 200px;
+            height: 200px;
+            border: 2px solid blue;
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .duplicateImage {
+            position: absolute;
+            left: -1000px;
+            width: 100px;
+            height: 100px;
+            background-color: #d6139f;
+            font-size: 12px;
+            display: grid;
+            place-items: center;
+            pointer-events: none;
+        }
+
+        .ani {
+            animation-name: ani1;
+            animation-duration: 1s;
+            animation-iteration-count: infinite;
+        }
+
+        #invisibleImage {
+            position: absolute;
+            opacity: 0;
+        }
+
+        @keyframes ani1 {
+            0% {
+                transform: rotate(0);
+            }
+
+            40% {
+                transform: rotate(0);
+            }
+
+            42% {
+                transform: rotate(-5deg);
+            }
+
+            44% {
+                transform: rotate(0);
+            }
+
+            46% {
+                transform: rotate(5deg);
+            }
+
+            48% {
+                transform: rotate(0);
+            }
+
+            50% {
+                transform: rotate(-5deg);
+            }
+
+            52% {
+                transform: rotate(0);
+            }
+
+            54% {
+                transform: rotate(5deg);
+            }
+
+            56% {
+                transform: rotate(0);
+            }
+
+            100% {
+                transform: rotate(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="dragArea">
+        <img src="https://via.placeholder.com/100" draggable="true" id="draggableImage">
+    </div>
+    <div id="dropArea">
+        拖到這裡來
+    </div>
+    <div id="duplicateImage" class="duplicateImage">
+        100x100
+    </div>
+    <img id="invisibleImage" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
+    <script>
+        const body = document.querySelector("body")
+        const img = document.querySelector("img")
+        const dropArea = document.querySelector("#dropArea")
+
+        const img2 = document.querySelector("#duplicateImage")
+        const invisibleImage = document.querySelector("#invisibleImage")
+
+        img.addEventListener("dragstart", e => {
+            e.dataTransfer.setData("text/plain", e.target.id)
+            e.target.style.opacity = 0
+
+            const node = img2.cloneNode(true)
+            node.setAttribute("id", "cloneNode")
+            node.classList.add("ani")
+            node.style.position = "absolute"
+            node.style.left = e.offsetX + "px"
+            node.style.top = e.offsetY + "px"
+            body.append(node)
+
+            e.dataTransfer.setDragImage(invisibleImage, 0, 0)
+        })
+
+        img.addEventListener("drag", e => {
+            const node = document.querySelector("#cloneNode")
+            if (!e.offsetX || e.offsetX <= -10) {
+                img.style.opacity = 1
+                node.remove()
+            }
+            if (node) {
+                node.style.left = e.offsetX + "px"
+                node.style.top = e.offsetY + "px"
+            }
+
+        })
+
+        img.addEventListener("dragend", e => {
+            e.target.style.opacity = 1
+            const node = document.querySelector("#cloneNode")
+            node && node.remove()
+        })
+
+        dropArea.addEventListener("dragover", e => {
+            e.preventDefault()
+        })
+        dropArea.addEventListener("drop", e => {
+            e.preventDefault()
+            const node = document.querySelector("#cloneNode")
+            node && node.remove()
+            const data = e.dataTransfer.getData("text")
+            console.log(data);
+            const dropElm = document.querySelector("#" + data)
+            if (!dropArea.contains(dropElm)) {
+                dropArea.append(dropElm)
+            }
+
+        })
+    </script>
+</body>
+
+</html>

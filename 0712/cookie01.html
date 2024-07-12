@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <script>
+        const getCookie = (name) => {
+            const nameEQ = `${name}=`;
+            const ca = document.cookie.split(';').map(cookie => cookie.trim());
+            const cookie = ca.find(cookie => cookie.startsWith(nameEQ));
+            return cookie ? cookie.substring(nameEQ.length) : null;
+        };
+
+        const setCookie = (key, value, path="/") => {
+            let today = new Date();
+            today.setDate(today.getDate() + 30);
+            let expires = today.toUTCString();
+            document.cookie = `${key}=${value};expires=${expires};path=${path}`;
+        }
+
+        const delCookie = (key) => {
+            let today = new Date("2000/01/01");
+            let expires = today.toUTCString();
+            document.cookie = `${key}=;expires=${expires}`;
+            console.log(key);
+        }
+
+        // document.cookie = "username=Ben Chen;expires=Thu, 18 Dec 2024 12:00:00 UTC;path=/";
+        // document.cookie = "password=a12345;expires=Thu, 18 Dec 2024 12:00:00 UTC;path=/";
+        // let cookie = document.cookie;
+        setCookie("bbb", "123");
+        // delCookie("bbb");
+
+        console.log(getCookie("bbb"));
+
+    </script>
+</body>
+</html>

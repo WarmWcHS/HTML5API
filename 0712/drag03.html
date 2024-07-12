@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #dragArea {
+            width: 200px;
+            height: 200px;
+            border: 2px dashed #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #dropArea {
+            width: 200px;
+            height: 200px;
+            border: 2px solid blue;
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="dragArea">
+        <img src="https://via.placeholder.com/100" draggable="true" id="draggableImage">
+    </div>
+    <div id="dropArea">
+        拖到這裡來
+    </div>
+    <script>
+        const img = document.querySelector("img")
+        const dropArea = document.querySelector("#dropArea")
+
+        img.addEventListener("dragstart", e => {
+            e.dataTransfer.setData("text/plain", e.target.id)
+        })
+
+        dropArea.addEventListener("dragover", e => {
+            e.preventDefault()
+        })
+        dropArea.addEventListener("drop", e => {
+            e.preventDefault()
+            const data = e.dataTransfer.getData("text")
+            console.log(data);
+            const dropElm = document.querySelector("#" + data)
+            if(!dropArea.contains(dropElm)){
+                dropArea.append(dropElm)
+            }
+            
+        })
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .ball{
+            width: 50px;
+            height: 50px;
+            background-color: #eb6363;
+            border-radius: 50%;
+        }
+        .rect{
+            width: 150px;
+            height: 80px;
+            background-color: #d6f15e;
+            display: grid;
+            place-items: center;
+            position: absolute;
+            right: 0;
+            top: 200px;
+        }
+    </style>
+</head>
+<body>
+    <div class="ball" draggable="true"></div>
+    <div class="rect">放進來</div>
+    <script>
+        const ball = document.querySelector(".ball")
+        const rect = document.querySelector(".rect")
+
+        ball.addEventListener("dragstart",e => {
+            console.log("qqqqqq");
+            e.dataTransfer.setData("text/plain","圓的")
+        })
+
+        rect.addEventListener("dragover", e => {
+            e.preventDefault()
+        })
+        rect.addEventListener("drop",e => {
+            e.preventDefault()
+            let data = e.dataTransfer.getData("text")
+            console.log(data);
+            e.currentTarget.textContent = data
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .ball {
+            width: 50px;
+            height: 50px;
+            background-color: #eb6363;
+            border-radius: 50%;
+        }
+
+        .ball2 {
+            background-color: #893cee;
+        }
+
+        .ball3 {
+            background-color: #8ff0f3;
+        }
+
+        .rect {
+            width: 150px;
+            height: 80px;
+            background-color: #d6f15e;
+            display: grid;
+            place-items: center;
+            position: absolute;
+            right: 0;
+            top: 200px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="ball ball1" draggable="true" data-color="#eb6363"></div>
+    <div class="ball ball2" draggable="true" data-color="#893cee"></div>
+    <div class="ball ball3" draggable="true" data-color="#8ff0f3"></div>
+    <div class="rect">放進來</div>
+    <script>
+        const balls = document.querySelectorAll(".ball")
+        const rect = document.querySelector(".rect")
+
+        balls.forEach(ball => {
+            ball.addEventListener("dragstart", e => {
+                let color = e.target.dataset.color
+                console.log("qqqqqq" + color);
+                e.dataTransfer.setData("text/plain", color)
+            })
+        })
+
+
+
+        rect.addEventListener("dragover", e => {
+            e.preventDefault()
+        })
+        rect.addEventListener("drop", e => {
+            e.preventDefault()
+            let data = e.dataTransfer.getData("text")
+            console.log(data);
+            e.currentTarget.style.backgroundColor = data
+        })
+    </script>
+</body>
+
+</html>

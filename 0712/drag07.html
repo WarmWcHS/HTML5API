@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .drapArea {
+            width: 300px;
+            height: 200px;
+            border: 2px dashed #ec8f8f;
+            display: grid;
+            place-items: center;
+            transition: all 0.2s;
+
+            &:hover {
+                background-color: #e873f3;
+            }
+        }
+
+        .hover {
+            background-color: #e873f3;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="drapArea" id="drapArea">
+        拖YEE檔案進來
+    </div>
+    <script>
+        const drapArea = document.querySelector(".drapArea");
+        ["dragenter", "dragover", "dragleave", "drop"].forEach(eventName => {
+            drapArea.addEventListener(eventName, e => {
+                e.preventDefault()
+            });
+        });
+
+        ["dragenter", "dragover"].forEach(eventName => {
+            drapArea.addEventListener(eventName, e => {
+                e.target.classList.add("hover")
+            })
+        });
+
+        ["dragleave", "drop"].forEach(eventName => {
+            drapArea.addEventListener(eventName, e => {
+                e.target.classList.remove("hover")
+            })
+        });
+
+        drapArea.addEventListener("drop", e => {
+            let files = e.dataTransfer.files;
+            [...files].forEach(file => {
+                upload(file)
+            })
+        });
+
+        function upload(file) {
+            console.log(`即將上傳檔案：${file.name}`);
+        };
+    </script>
+</body>
+
+</html>

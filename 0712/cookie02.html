@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .container {
+            height: 100svh;
+            display: grid;
+            place-items: center;
+        }
+
+        .box {
+            width: 300px;
+            height: 300px;
+            cursor: pointer;
+        }
+
+        .box img {
+            width: 100%;
+            height: auto;
+        }
+
+        .unbox {
+            width: auto;
+            height: 350px;
+        }
+
+        .unbox img {
+            height: 100%;
+            width: auto;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .info {
+            font-size: 36px;
+            text-align: center;
+        }
+
+        .big {
+            font-family: sans-serif;
+            font-weight: bold;
+            color: #ed1b1b;
+            font-size: 60px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="package">
+            <div class="info">恭喜你中了第<span class="big"> N</span> 獎</div>
+            <div class="box hidden">
+                <img src="https://littleblessings.com.au/wp-content/uploads/2019/09/Gift-Box.jpg" alt="">
+            </div>
+            <div class="unbox hidden">
+                <img src="https://st4.depositphotos.com/2495409/24488/i/450/depositphotos_244880124-stock-photo-opened-gift-box-illustration-isolated.jpg"
+                    alt="">
+            </div>
+        </div>
+    </div>
+    <script>
+        const getCookie = (name) => {
+            const nameEQ = `${name}=`;
+            const ca = document.cookie.split(';').map(cookie => cookie.trim());
+            const cookie = ca.find(cookie => cookie.startsWith(nameEQ));
+            return cookie ? cookie.substring(nameEQ.length) : null;
+        };
+
+        const setCookie = (key, value, path = "/") => {
+            let today = new Date();
+            today.setDate(today.getDate() + 30);
+            let expires = today.toUTCString();
+            document.cookie = `${key}=${value};expires=${expires};path=${path}`;
+        }
+
+        const delCookie = (key) => {
+            let today = new Date("2000/01/01");
+            let expires = today.toUTCString();
+            document.cookie = `${key}=;expires=${expires}`;
+        }
+
+        const info = document.querySelector(".info")
+        const box = document.querySelector(".box")
+        const unbox = document.querySelector(".unbox")
+
+        if (!getCookie("gifted")) {
+            box.classList.remove("hidden")
+            info.innerHTML = "請抽獎"
+        } else {
+            unbox.classList.remove("hidden")
+            info.innerHTML = `已抽獎，得到第 <span class="big"> ${getCookie("gifted")}</span>獎`
+        }
+
+        box.addEventListener("click", e => {
+            const num = Math.floor(Math.random() * 20) + 1
+            setCookie("gifted", num)
+            info.innerHTML = `恭喜中獎，得到第 <span class="big"> ${getCookie("gifted")}</span> 獎`
+            box.classList.add("hidden")
+            unbox.classList.remove("hidden")
+        })
+    </script>
+</body>
+
+</html>

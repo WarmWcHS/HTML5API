@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        ul li {
+            list-style: none;
+            padding: 8px 16px;
+            margin: 4px;
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            cursor: move;
+        }
+
+        ul li.dragging {
+            opacity: 0.5;
+        }
+    </style>
+</head>
+
+<body>
+    <ul id="sortableList">
+        <li draggable="true">項目 1</li>
+        <li draggable="true">項目 2</li>
+        <li draggable="true">項目 3</li>
+        <li draggable="true">項目 4</li>
+    </ul>
+    <script>
+        let draggedItem = null
+
+        document.querySelectorAll("li").forEach(item => {
+            item.addEventListener("dragstart", e => {
+                draggedItem = e.currentTarget
+                e.currentTarget.classList.add("dragging")
+            })
+            item.addEventListener("dragend", e => {
+                e.currentTarget.classList.remove("dragging")
+            })
+            item.addEventListener("dragover", e => {
+                e.preventDefault()
+            })
+            item.addEventListener("drop", e => {
+                e.preventDefault()
+                const _this=e.currentTarget
+                if(_this !== draggedItem){
+                    const list = draggedItem.parentNode
+                    const draggedIndex = [...list.children].indexOf(draggedItem)
+                    const dropIndex = [...list.children].indexOf(_this)
+                    console.log(draggedIndex,dropIndex);
+                    if(draggedIndex>dropIndex){
+                        list.insertBefore(draggedItem,_this)
+                    }else{
+                        list.insertBefore(draggedItem,_this.nextSibling)
+                    }
+                    
+                }
+            })
+        })
+    </script>
+</body>
+
+</html>

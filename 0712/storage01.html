@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        localStorage.setItem("userName","WWcHS")
+        localStorage.setItem("password","123123")
+        localStorage.setItem("email","WWcHS@gmail.com")
+
+        // localStorage.removeItem("password")
+        // localStorage.clear()
+
+        console.log(localStorage.getItem("userName"));
+        console.log(localStorage.getItem("password"));
+        console.log(localStorage.getItem("email"));
+
+        // console.log(localStorage.key(0));
+        // console.log(localStorage.key(1));
+        // console.log(localStorage.key(2));
+        // console.log(localStorage.length);
+
+        for(let i=0;i<localStorage.length;i++){
+            console.log(localStorage.getItem(localStorage.key(i)));
+        }
+
+        for(let [key,value] of Object.entries(localStorage)){
+            console.log(`${key}=${value}`);
+        }
+    </script>
+</body>
+</html>
