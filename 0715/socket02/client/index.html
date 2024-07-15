@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .myAcc {
+            &::after {
+                content: "<=ME";
+                margin-left: 20px;
+                color: red;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div>123123123123</div>
+    <div class="myAcc">123123123123</div>
+    <script>
+        const ws = new WebSocket("ws://localhost:8080")
+        const userid = new Date().getTime().toString()
+        let clientList;
+        ws.addEventListener("open", () => {
+            console.log("建立連線");
+            let params = {
+                type: "register",
+                userid
+            }
+            ws.send(JSON.stringify(params))
+        })
+        ws.addEventListener("message", async e => {
+            let re1 = JSON.parse(e.data)
+            if (re1.type === "registered") {
+                clientList = re1.otherClients;
+                setClients()
+            }
+            if (re1.type === "disconnected") {
+                clientList = re1.otherClients;
+                setClients()
+            }
+        })
+
+        function setClients() {
+            let clientHTML = "<div>"
+            clientList.forEach(client => {
+                let myself = (client===userid)?"class = \"myAcc\"" : "";
+                clientHTML+=`<div ${myself}>${client}</div>`
+            })
+            clientHTML += "</div>"
+            document.querySelector("body").innerHTML=clientHTML
+        }
+    </script>
+</body>
+
+</html>

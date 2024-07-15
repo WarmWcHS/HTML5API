@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>連線應用範例</title>
+    <link rel="stylesheet" href="./css/index.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div class="container-lg h-100 bg-primary-subtle p-2 main d-flex flex-column">
+        <div class="up d-flex">
+            <div class="left bg-warning-subtle me-1 p-2">
+                <h3>聊天室</h3>
+                <div class="list"></div>
+            </div>
+            <div class="right bg-secondary-subtle h-100 rounded-1 p-2">
+                <h3>小房間列表</h3>
+                <div class="list"></div>
+            </div>
+        </div>
+        <div class="down my-1">
+            <div class="input-group input-group-lg mb-1">
+                <input type="text" class="form-control" name="msg" placeholder="輸入聊天訊息">
+                <div class="btn btn-primary input-group-text btn-send">送出訊息</div>
+            </div>
+            <div class="input-group input-group-lg">
+                <input type="text" class="form-control" name="roomName" placeholder="輸入房間名稱">
+                <div class="btn btn-primary input-group-text btn-croom">建立房間</div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const ws = new WebSocket("ws://localhost:8080")
+        const userid = new Date().getTime().toString()
+        const rightArea = document.querySelector(".right")
+        const leftArea = document.querySelector(".left")
+        const inputMsg = document.querySelector("input[name=msg]")
+        const btnSend = document.querySelector(".btn-send")
+        const inputRoom = document.querySelector("input[name=roomName]")
+        const btnCroom = document.querySelector(".btn-croom")
+        let targetID, roomID, roomName, clientList, roomList;
+        ws.addEventListener("open", () => {
+            console.log("建立連線");
+            leftArea.innerHTML = `<div>${userid}，歡淫進入撩舔舐</div>`
+            let params = {
+                type: "register",
+                userid
+            }
+            ws.send(JSON.stringify(params))
+        })
+
+        btnSend.addEventListener("click", () => {
+            sendMsg()
+        })
+        inputMsg.addEventListener("keyup", e => {
+            if (e.key === "Enter") {
+                sendMsg()
+            }
+        })
+
+        btnCroom.addEventListener("click", () => {
+            creatRoom()
+        })
+        inputRoom.addEventListener("keyup", e => {
+            if (e.key === "Enter") {
+                creatRoom()
+            }
+        })
+
+
+        ws.addEventListener("message", async e => {
+            let re1 = JSON.parse(e.data)
+            if (re1.type === "registered") {
+                // clientList = re1.otherClients;
+                // setClients()
+                roomList = re1.allRooms
+                setRooms()
+            }
+            if (re1.type === "disconnected") {
+                clientList = re1.otherClients;
+                setClients()
+            }
+            if (re1.type === "message") {
+                const { fromID, targetID, message } = re1
+                if (!targetID) {
+                    leftArea.innerHTML += `<div>${fromID} 說: ${message}</div>`
+                } else {
+                    if (targetID !== userid) {
+                        leftArea.innerHTML += `<div>我悄悄對 ${targetID} 說: ${message}</div>`
+                    } else {
+                        leftArea.innerHTML += `<div>${fromID} 悄悄對你說: ${message}</div>`
+                    }
+                }
+
+                console.log(fromID, targetID, message);
+            }
+            if(re1.type === "newRoom"){
+                roomList = re1.allRooms;
+                setRooms();
+            }
+            if(re1.type === "joinRoom"){
+                
+            }
+            if(re1.type === "leaveRoom"){
+                
+            }
+        })
+
+        function setRooms() {
+            if(roomID){
+                return
+            }
+            let clientHTML = "<div>"
+            roomList.forEach(client => {
+                // console.log(client);
+                clientHTML += `<div roomName="${client.name}" roomID="${client.rid}" class="btn btn-success w-100 mb-1 ">${client.name}</div>`
+            })
+            clientHTML += "</div>"
+            rightArea.innerHTML = clientHTML
+            const btns = rightArea.querySelectorAll(".btn")
+
+            btns.forEach(btn => {
+                btn.addEventListener("click", e => {
+                    const roomid = e.currentTarget.getAttribute("roomID")
+                    const roomname = e.currentTarget.getAttribute("roomName")
+                    roomID = roomid
+                    roomName=roomname
+                    let params = {
+                        type: "joinRoom",
+                        fromID: userid,
+                        roomID,roomName
+                    }
+                    ws.send(JSON.stringify(params))
+                    // 直接進房間
+                    leftArea.innerHTML = `進入房間：${roomName}`
+                    rightArea.innerHTML = "等待使用者加入..."
+                    btnCroom.innerHTML = "離開房間"
+                    btnCroom.classList.add("btn-danger")
+                })
+            })
+        }
+
+
+        function creatRoom() {
+            if (roomID) {
+                // 離開
+                const params = {
+                    type: "leaveRoom",
+                    fromID: userid,
+                    roomID
+                }
+                ws.send(JSON.stringify(params))
+                // 直接離開房間
+                leftArea.innerHTML = `回到聊天大廳`
+                rightArea.innerHTML = "等待房間清單更新"
+                btnCroom.innerHTML = "建立房間"
+                btnCroom.classList.remove("btn-danger")
+                roomID = undefined
+                roomName = undefined
+                return
+            }
+            // 建立
+            roomID = `room${new Date().getTime().toString()}`
+            roomName = inputRoom.value
+            if (roomName === "") {
+                alert("房名不可為空")
+                return;
+            }
+            const params = {
+                type: "creatRoom",
+                fromID: userid,
+                roomName, roomID
+            }
+            ws.send(JSON.stringify(params))
+
+            inputRoom.value = ""
+            // 直接進房間
+            leftArea.innerHTML = `進入房間：${roomName}`
+            rightArea.innerHTML = "等待使用者加入..."
+            btnCroom.innerHTML = "離開房間"
+            btnCroom.classList.add("btn-danger")
+        }
+
+
+        function sendMsg() {
+            const message = inputMsg.value
+            if (inputMsg === "") {
+                alert("訊息不可為空")
+                return;
+            }
+            const params = {
+                type: "message",
+                message,
+                targetID,
+                fromID: userid
+            }
+            ws.send(JSON.stringify(params))
+
+            inputMsg.value = ""
+        }
+
+        function setClients() {
+            let clientHTML = "<div>"
+            clientList.forEach(client => {
+                let myself = (client === userid) ? "btn-primary" : "btn-secondary";
+                clientHTML += `<div clientID="${client}" class="btn ${myself} w-100 mb-1 ">${client}</div>`
+            })
+            clientHTML += "</div>"
+            rightArea.innerHTML = clientHTML
+            const btns = rightArea.querySelectorAll(".btn")
+            btns.forEach(btn => {
+                btn.addEventListener("click", e => {
+                    const clientID = e.currentTarget.getAttribute("clientID")
+                    if (clientID === userid) {
+                        return
+                    }
+                    if (!targetID) {
+                        e.currentTarget.classList.add("btn-danger")
+                        targetID = clientID
+                    } else {
+                        if (targetID === clientID) {
+                            e.currentTarget.classList.remove("btn-danger")
+                            targetID = undefined
+                        }
+                    }
+
+                })
+            })
+        }
+    </script>
+</body>
+
+</html>

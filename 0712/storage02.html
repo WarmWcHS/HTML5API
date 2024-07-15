@@ -16,6 +16,10 @@
         .todo {
             font-size: 24px;
         }
+
+        .deleted {
+            position: absolute;
+        }
     </style>
 </head>
 
@@ -45,7 +49,7 @@
 
 
         myInput.addEventListener("keyup", e => {
-            if(e.key === "Enter" && e.ctrlKey === true){
+            if (e.key === "Enter" && e.ctrlKey === true) {
                 const t = new Date().getTime();
                 let tmpObj = {};
                 tmpObj.t = t;
@@ -59,11 +63,28 @@
 
         todolist.addEventListener("change", e => {
             e.target.disabled = true
-            let elm =e.target.closest(".todo")
-            let t = parseInt(e.target.id.slice(4),10)
-            todoAry = todoAry.filter(dodo => dodo.t != t)
-            localStorage.setItem("todo",JSON.stringify(todoAry))
-            elm.remove()
+            let elm = e.target.closest(".todo")
+            let t = parseInt(e.target.id.slice(4), 10)
+
+            elm.classList.add("delete")
+            const animation = elm.animate([
+                {
+                    transform: `translateY(0)`,
+                    opacity: 1
+                },
+                {
+                    transform: `translateY(${window.innerHeight - e.target.offsetTop - 100}px)`,
+                    opacity: 0
+                }
+            ], {
+                duration: 500,
+                fill: `forwards`
+            })
+            animation.onfinish = () => {
+                todoAry = todoAry.filter(dodo => dodo.t != t)
+                localStorage.setItem("todo",JSON.stringify(todoAry))
+                elm.remove()
+            }
         })
 
 

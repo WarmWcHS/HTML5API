@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>多人連線測試</h1>
+    <div class="chatbox">
+        接收訊息
+    </div>
+
+    <input type="text" name="msg">
+    <button>送出</button>
+    <script>
+        const chatbox = document.querySelector(".chatbox")
+        const input = document.querySelector("input[name=msg]")
+        const btn = document.querySelector("button")
+        const ws = new WebSocket("ws://localhost:8080")
+        btn.addEventListener("click", () => {
+            const msg = input.value;
+
+            ws.send(msg)
+
+            input.value = ""
+        })
+
+        ws.addEventListener("open", () => {
+            console.log("Link Start");
+        })
+
+        ws.addEventListener("message", async e => {
+            const text = await e.data.text()
+            chatbox.innerHTML += `<div>${text}</div>`
+        })
+    </script>
+</body>
+
+</html>
